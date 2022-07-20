@@ -2,6 +2,8 @@ package br.com.zup.edu.minhasfigurinhas.albuns;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,9 +21,11 @@ public class NovoAlbumController {
 
     @Transactional
     @PostMapping("/api/albuns")
-    public ResponseEntity<?> cadastra(@RequestBody @Valid NovoAlbumRequest request, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<?> cadastra(@RequestBody @Valid NovoAlbumRequest request, UriComponentsBuilder uriBuilder,
+                                      @AuthenticationPrincipal Jwt principalUser) {
 
-        Album album = request.toModel();
+        String username = principalUser.getClaim("preferred_username");
+        Album album = request.toModel(username);
         repository.save(album);
 
         URI location = uriBuilder.path("/api/albuns/{id}")

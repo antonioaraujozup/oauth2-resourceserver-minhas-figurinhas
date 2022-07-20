@@ -35,3 +35,9 @@ spring:
         hibernate:
             ddl-auto: update
             dialect: org.hibernate.dialect.H2Dialect
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://localhost:18080/realms/album-figurinhas
+                    jwk-set-uri: http://localhost:18080/realms/album-figurinhas/protocol/openid-connect/certs
